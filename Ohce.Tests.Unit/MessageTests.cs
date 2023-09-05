@@ -11,6 +11,30 @@ public class MessageTests
     }
 
     [Theory]
+    [InlineData("")]
+    [InlineData(null)]
+    public void GetWelcomeMessage_WhenSuppliedInvalidName_ArgumentNullExceptionIsThrown(string invalidName)
+    {
+        var message = new Message();
+
+        var result = () => message.GetWelcomeMessage(8, invalidName);
+
+        result.Should().Throw<ArgumentNullException>();
+    }
+
+    [Theory]
+    [InlineData(-1)]
+    [InlineData(24)]
+    public void GetWelcomeMessage_WhenTimeSuppliedIsNotWithingTheRange_ArgumentOutOfRangeExceptionIsThrown(int invalidHour)
+    {
+        var message = new Message();
+
+        var result = () => message.GetWelcomeMessage(invalidHour, "Kunal");
+
+        result.Should().Throw<ArgumentOutOfRangeException>();
+    }
+
+    [Theory]
     [InlineData(6)]
     [InlineData(11)]
     public void GetWelcomeMessage_WhenTimeIsMorningHours_ReturnGoodMorningMessage(int hour)
