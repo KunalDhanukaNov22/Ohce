@@ -55,8 +55,7 @@ public class MessageTests
 
         var result = message.GetWelcomeMessage(ValidName);
 
-        result.Should().NotBeNull();
-        result.Should().Be("¡Buenos días Kunal!");
+        ValidateResult(result, "¡Buenos días Kunal!");
     }
 
     [Theory]
@@ -68,8 +67,7 @@ public class MessageTests
 
         var result = message.GetWelcomeMessage(ValidName);
 
-        result.Should().NotBeNull();
-        result.Should().Be("¡Buenas tardes Kunal!");
+        ValidateResult(result, "¡Buenas tardes Kunal!");
     }
 
     [Theory]
@@ -81,8 +79,25 @@ public class MessageTests
 
         var result = message.GetWelcomeMessage(ValidName);
 
-        result.Should().NotBeNull();
-        result.Should().Be("¡Buenas noches Kunal!");
+        ValidateResult(result, "¡Buenas noches Kunal!");
+    }
+
+    [Fact]
+    public void GetPalindromeMessage_WhenInvoked_ThenReturnPalindromeMessage()
+    {
+        var result = message.GetPalindromeMessage();
+
+        ValidateResult(result, "¡Bonita palabra!");
+    }
+
+    [Fact]
+    public void GetSignOffMessage_WhenInvoked_ThenReturnSignOffMessage()
+    {
+        message.GetWelcomeMessage(ValidName);
+
+        var result = message.GetSignOffMessage();
+
+        ValidateResult(result, "Adios Kunal");
     }
 
     private void SetUpHourNow(int hour)
@@ -90,5 +105,11 @@ public class MessageTests
         currentHour
             .Setup(x => x.Get())
             .Returns(hour);
+    }
+
+    private void ValidateResult(string actualMessage, string expectedMessage)
+    {
+        actualMessage.Should().NotBeNull();
+        actualMessage.Should().Be(expectedMessage);
     }
 }
