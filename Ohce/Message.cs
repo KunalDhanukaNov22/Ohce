@@ -1,4 +1,4 @@
-﻿public class Message
+﻿public class Message : IMessage
 {
     private readonly ICurrentHour currentHour;
     private readonly Person person;
