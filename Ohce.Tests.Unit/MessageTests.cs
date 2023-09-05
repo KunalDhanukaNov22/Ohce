@@ -1,12 +1,26 @@
-﻿namespace Ohce.Tests.Unit;
+﻿using Moq;
+
+namespace Ohce.Tests.Unit;
 
 public class MessageTests
 {
+    private const string ValidName = "Kunal";
+
+    private readonly Mock<ICurrentHour> currentHour;
+    private readonly Message message;
+
+    public MessageTests()
+    {
+        currentHour = new Mock<ICurrentHour>();
+
+        message = new Message(currentHour.Object);
+
+        SetUpHourNow(2);
+    }
+
     [Fact]
     public void Message_IsNotNull()
     {
-        var message = new Message();
-
         message.Should().NotBeNull();
     }
 
@@ -15,9 +29,7 @@ public class MessageTests
     [InlineData(null)]
     public void GetWelcomeMessage_WhenSuppliedInvalidName_ArgumentNullExceptionIsThrown(string invalidName)
     {
-        var message = new Message();
-
-        var result = () => message.GetWelcomeMessage(8, invalidName);
+        var result = () => message.GetWelcomeMessage(invalidName);
 
         result.Should().Throw<ArgumentNullException>();
     }
@@ -27,9 +39,9 @@ public class MessageTests
     [InlineData(24)]
     public void GetWelcomeMessage_WhenTimeSuppliedIsNotWithingTheRange_ArgumentOutOfRangeExceptionIsThrown(int invalidHour)
     {
-        var message = new Message();
+        SetUpHourNow(invalidHour);
 
-        var result = () => message.GetWelcomeMessage(invalidHour, "Kunal");
+        var result = () => message.GetWelcomeMessage(ValidName);
 
         result.Should().Throw<ArgumentOutOfRangeException>();
     }
@@ -39,9 +51,9 @@ public class MessageTests
     [InlineData(11)]
     public void GetWelcomeMessage_WhenTimeIsMorningHours_ReturnGoodMorningMessage(int hour)
     {
-        var message = new Message();
+        SetUpHourNow(hour);
 
-        var result = message.GetWelcomeMessage(hour, "Kunal");
+        var result = message.GetWelcomeMessage(ValidName);
 
         result.Should().NotBeNull();
         result.Should().Be("¡Buenos días Kunal!");
@@ -52,9 +64,9 @@ public class MessageTests
     [InlineData(19)]
     public void GetWelcomeMessage_WhenTimeIsAfternoonHours_ReturnGoodAfternoonMessage(int hour)
     {
-        var message = new Message();
+        SetUpHourNow(hour);
 
-        var result = message.GetWelcomeMessage(hour, "Kunal");
+        var result = message.GetWelcomeMessage(ValidName);
 
         result.Should().NotBeNull();
         result.Should().Be("¡Buenas tardes Kunal!");
@@ -63,13 +75,20 @@ public class MessageTests
     [Theory]
     [InlineData(20)]
     [InlineData(5)]
-    public void GetWelcomeMessage_WhenTimeIsNightHours_ReturnGoodNightMessage(int hours)
+    public void GetWelcomeMessage_WhenTimeIsNightHours_ReturnGoodNightMessage(int hour)
     {
-        var message = new Message();
+        SetUpHourNow(hour);
 
-        var result = message.GetWelcomeMessage(hours, "Kunal");
+        var result = message.GetWelcomeMessage(ValidName);
 
         result.Should().NotBeNull();
         result.Should().Be("¡Buenas noches Kunal!");
+    }
+
+    private void SetUpHourNow(int hour)
+    {
+        currentHour
+            .Setup(x => x.Get())
+            .Returns(hour);
     }
 }
