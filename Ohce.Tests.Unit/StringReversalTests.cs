@@ -21,14 +21,17 @@ public class StringReversalTests
     }
 
     [Theory]
-    [InlineData("sample", "elpmas")]
-    [InlineData("ready", "ydaer")]
-    public void Reverse_WhenInvokedWithValidStringInput_ReturnReversedString(string inputString, string expectedString)
+    [InlineData("sample", "elpmas", false)]
+    [InlineData("ready", "ydaer", false)]
+    [InlineData("oto", "oto", true)]
+    [InlineData("Tenet", "teneT", true)]
+    public void Reverse_WhenInvokedWithValidStringInput_ReturnReversedStringWithIsPalindromeStatus(string inputString, string expectedString, bool isPalindrome)
     {
         var stringReversal = new StringReversal();
 
         var result = stringReversal.Reverse(inputString);
 
-        result.Should().Be(expectedString);
+        result.ReversedString.Should().Be(expectedString);
+        result.IsPalindrome.Should().Be(isPalindrome);
     }
 }
