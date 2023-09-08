@@ -7,12 +7,12 @@ public class ApplicationTests
 {
     private const string ValidName = "Kunal";
 
-    private Mock<TextReader> consoleInput;
-    private Mock<ICurrentHour> currentHour;
-    private IMessage message;
-    private IStringReversal stringReversal;
-    private StringBuilder consoleOutput;
-    private Application application;
+    private readonly Mock<TextReader> consoleInput;
+    private readonly Mock<ICurrentHour> currentHour;
+    private readonly IMessage message;
+    private readonly IStringReversal stringReversal;
+    private readonly StringBuilder consoleOutput;
+    private readonly Application application;
 
     public ApplicationTests()
     {

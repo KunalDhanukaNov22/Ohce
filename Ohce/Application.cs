@@ -34,6 +34,9 @@
             var result = stringReversal.Reverse(input);
 
             Console.WriteLine(result.ReversedString);
+
+            if (result.IsPalindrome)
+                Console.WriteLine(message.GetPalindromeMessage());
         }
 
         Console.WriteLine(message.GetSignOffMessage());
