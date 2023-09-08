@@ -1,17 +1,11 @@
 ﻿public class Message : IMessage
 {
-    private readonly ICurrentHour currentHour;
     private readonly Person person;
 
-    public Message(ICurrentHour currentHour)
-    {
-        this.currentHour = currentHour;
-        person = new Person();
-    }
+    public Message() => person = new Person();
 
-    public string GetWelcomeMessage(string name)
+    public string GetWelcomeMessage(string name, int hour)
     {
-        var hour = currentHour.Get();
         if (hour < 0 || hour > 23)
             throw new ArgumentOutOfRangeException(nameof(hour));
 

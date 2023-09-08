@@ -2,5 +2,5 @@
 {
     string GetPalindromeMessage();
     string GetSignOffMessage();
-    string GetWelcomeMessage(string name);
+    string GetWelcomeMessage(string name, int hour);
 }
