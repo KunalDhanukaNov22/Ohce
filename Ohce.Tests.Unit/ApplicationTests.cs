@@ -10,14 +10,16 @@ public class ApplicationTests
     private Mock<TextReader> consoleInput;
     private Mock<ICurrentHour> currentHour;
     private IMessage message;
+    private IStringReversal stringReversal;
     private StringBuilder consoleOutput;
     private Application application;
 
     public ApplicationTests()
     {
         message = new Message();
+        stringReversal = new StringReversal();
         currentHour = new Mock<ICurrentHour>();
-        application = new Application(message, currentHour.Object);
+        application = new Application(message, stringReversal, currentHour.Object);
 
         consoleInput = new Mock<TextReader>();
         Console.SetIn(consoleInput.Object);
@@ -150,6 +152,16 @@ public class ApplicationTests
         consoleInput
             .InSequence(sequence)
             .Setup(x => x.ReadLine())
+            .Returns("London");
+
+        consoleInput
+            .InSequence(sequence)
+            .Setup(x => x.ReadLine())
+            .Returns("Paris");
+
+        consoleInput
+            .InSequence(sequence)
+            .Setup(x => x.ReadLine())
             .Returns("Stop!");
 
         application.Run();
@@ -157,6 +169,8 @@ public class ApplicationTests
         var outputarray = consoleOutput.ToString().Trim().Split(Environment.NewLine);
 
         outputarray[1].Should().Be("1gnirtS");
+        outputarray[2].Should().Be("nodnoL");
+        outputarray[3].Should().Be("siraP");
     }
 
 

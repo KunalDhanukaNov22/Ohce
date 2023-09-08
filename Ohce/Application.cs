@@ -3,11 +3,16 @@
     private const string Stop = "Stop!";
 
     private readonly IMessage message;
+    private readonly IStringReversal stringReversal;
     private readonly ICurrentHour currentHour;
 
-    public Application(IMessage message, ICurrentHour currentHour)
+    public Application(
+        IMessage message,
+        IStringReversal stringReversal,
+        ICurrentHour currentHour)
     {
         this.message = message;
+        this.stringReversal = stringReversal;
         this.currentHour = currentHour;
     }
 
@@ -26,7 +31,9 @@
             if (input == Stop)
                 break;
 
-            Console.WriteLine(input);
+            var result = stringReversal.Reverse(input);
+
+            Console.WriteLine(result.ReversedString);
         }
 
         Console.WriteLine(message.GetSignOffMessage());
