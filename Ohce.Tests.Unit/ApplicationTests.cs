@@ -38,7 +38,7 @@ public class ApplicationTests
     [InlineData(null)]
     public void Run_WhenNameIsEmpty_ThrowsError(string invalidName)
     {
-        WelcomeMessageSetup(invalidName, 8);
+        InputSetup(invalidName, 8);
 
         var output = () => application.Run();
 
@@ -48,7 +48,7 @@ public class ApplicationTests
     [Fact]
     public void Run_WhenNameIsProvidedInMorning_GreetWithMorningWelcomeMessage()
     {
-        WelcomeMessageSetup(ValidName, 8);
+        InputSetup(ValidName, 8);
 
         application.Run();
 
@@ -61,7 +61,7 @@ public class ApplicationTests
     [Fact]
     public void Run_WhenNameIsProvidedInAfternoon_GreetWithAfternoonWelcomeMessage()
     {
-        WelcomeMessageSetup(ValidName, 13);
+        InputSetup(ValidName, 13);
 
         application.Run();
 
@@ -74,7 +74,7 @@ public class ApplicationTests
     [Fact]
     public void Run_WhenNameIsProvidedInNight_GreetWithNightWelcomeMessage()
     {
-        WelcomeMessageSetup(ValidName, 20);
+        InputSetup(ValidName, 20);
 
         application.Run();
 
@@ -86,7 +86,7 @@ public class ApplicationTests
     [Fact]
     public void Run_WhenInputSuppliedIsStop_ReturnSignOffMessage()
     {
-        WelcomeMessageSetup(ValidName, 20);
+        InputSetup(ValidName, 20);
 
         application.Run();
 
@@ -132,8 +132,35 @@ public class ApplicationTests
         outputarray[4].Should().Be("Adios Kunal");
     }
 
+    [Fact]
+    public void Run_WhenInputSuppliedApartFromNameAndStop_GetReverseOfTheInputString()
+    {
+        var sequence = new MockSequence();
 
-    private void WelcomeMessageSetup(string name, int hour)
+        consoleInput
+            .InSequence(sequence)
+            .Setup(x => x.ReadLine())
+            .Returns(ValidName);
+
+        consoleInput
+            .InSequence(sequence)
+            .Setup(x => x.ReadLine())
+            .Returns("String1");
+
+        consoleInput
+            .InSequence(sequence)
+            .Setup(x => x.ReadLine())
+            .Returns("Stop!");
+
+        application.Run();
+
+        var outputarray = consoleOutput.ToString().Trim().Split(Environment.NewLine);
+
+        outputarray[1].Should().Be("1gnirtS");
+    }
+
+
+    private void InputSetup(string name, int hour)
     {
         var sequence = new MockSequence();
 
