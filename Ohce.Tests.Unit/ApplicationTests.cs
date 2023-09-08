@@ -171,6 +171,36 @@ public class ApplicationTests
         outputarray[1].Should().Be("1gnirtS");
         outputarray[2].Should().Be("nodnoL");
         outputarray[3].Should().Be("siraP");
+        outputarray[4].Should().Be("Adios Kunal");
+    }
+
+    [Fact]
+    public void Run_WhenInputSuppliedApartFromNameAndStopIsPalindrome_GetReverseOfTheInputStringWithPalindromeMessage()
+    {
+        var sequence = new MockSequence();
+
+        consoleInput
+            .InSequence(sequence)
+            .Setup(x => x.ReadLine())
+            .Returns(ValidName);
+
+        consoleInput
+            .InSequence(sequence)
+            .Setup(x => x.ReadLine())
+            .Returns("tenet");
+
+        consoleInput
+            .InSequence(sequence)
+            .Setup(x => x.ReadLine())
+            .Returns("Stop!");
+
+        application.Run();
+
+        var outputarray = consoleOutput.ToString().Trim().Split(Environment.NewLine);
+
+        outputarray[1].Should().Be("tenet");
+        outputarray[2].Should().Be("¡Bonita palabra!");
+        outputarray[3].Should().Be("Adios Kunal");
     }
 
 
