@@ -19,9 +19,16 @@
 
         Console.WriteLine(welcomeMessage);
 
-        var input = Console.ReadLine()?.Trim();
+        while (true)
+        {
+            var input = Console.ReadLine()?.Trim();
 
-        if (input == Stop)
-            Console.WriteLine(message.GetSignOffMessage());
+            if (input == Stop)
+                break;
+
+            Console.WriteLine(input);
+        }
+
+        Console.WriteLine(message.GetSignOffMessage());
     }
 }

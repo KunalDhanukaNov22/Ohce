@@ -52,9 +52,9 @@ public class ApplicationTests
 
         application.Run();
 
-        var output = consoleOutput.ToString().Trim();
+        var outputarray = consoleOutput.ToString().Trim().Split(Environment.NewLine);
 
-        output.Should().Be("¡Buenos días Kunal!");
+        outputarray[0].Should().Be("¡Buenos días Kunal!");
 
     }
 
@@ -65,9 +65,9 @@ public class ApplicationTests
 
         application.Run();
 
-        var output = consoleOutput.ToString().Trim();
+        var outputarray = consoleOutput.ToString().Trim().Split(Environment.NewLine);
 
-        output.Should().Be("¡Buenas tardes Kunal!");
+        outputarray[0].Should().Be("¡Buenas tardes Kunal!");
 
     }
 
@@ -78,25 +78,15 @@ public class ApplicationTests
 
         application.Run();
 
-        var output = consoleOutput.ToString().Trim();
+        var outputarray = consoleOutput.ToString().Trim().Split(Environment.NewLine);
 
-        output.Should().Be("¡Buenas noches Kunal!");
+        outputarray[0].Should().Be("¡Buenas noches Kunal!");
     }
 
     [Fact]
     public void Run_WhenInputSuppliedIsStop_ReturnSignOffMessage()
     {
-        var sequence = new MockSequence();
-
-        consoleInput
-         .InSequence(sequence)
-         .Setup(x => x.ReadLine())
-         .Returns(ValidName);
-
-        consoleInput
-         .InSequence(sequence)
-         .Setup(x => x.ReadLine())
-         .Returns("Stop!");
+        WelcomeMessageSetup(ValidName, 20);
 
         application.Run();
 
@@ -105,12 +95,57 @@ public class ApplicationTests
         outputarray[1].Should().Be("Adios Kunal");
     }
 
+    [Fact]
+    public void Run_UntilInputSuppliedIsNotStop_ContinueToAskForUserInput()
+    {
+        var sequence = new MockSequence();
+
+        consoleInput
+            .InSequence(sequence)
+            .Setup(x => x.ReadLine())
+            .Returns(ValidName);
+
+        consoleInput
+            .InSequence(sequence)
+            .Setup(x => x.ReadLine())
+            .Returns("String1");
+
+        consoleInput
+            .InSequence(sequence)
+            .Setup(x => x.ReadLine())
+            .Returns("String2");
+
+        consoleInput
+            .InSequence(sequence)
+            .Setup(x => x.ReadLine())
+            .Returns("String3");
+
+        consoleInput
+            .InSequence(sequence)
+            .Setup(x => x.ReadLine())
+            .Returns("Stop!");
+
+        application.Run();
+
+        var outputarray = consoleOutput.ToString().Trim().Split(Environment.NewLine);
+
+        outputarray[4].Should().Be("Adios Kunal");
+    }
+
 
     private void WelcomeMessageSetup(string name, int hour)
     {
+        var sequence = new MockSequence();
+
         consoleInput
-         .Setup(x => x.ReadLine())
-         .Returns(name);
+            .InSequence(sequence)
+            .Setup(x => x.ReadLine())
+            .Returns(name);
+
+        consoleInput
+            .InSequence(sequence)
+            .Setup(x => x.ReadLine())
+            .Returns("Stop!");
 
         currentHour.Setup(x => x.Get()).Returns(hour);
     }
