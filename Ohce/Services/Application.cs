@@ -1,7 +1,5 @@
 ﻿public class Application : IApplication
 {
-    private const string Stop = "Stop!";
-
     private readonly IMessage message;
     private readonly IStringReversal stringReversal;
     private readonly ICurrentHour currentHour;
@@ -28,7 +26,7 @@
         {
             var input = Console.ReadLine()?.Trim();
 
-            if (input == Stop)
+            if (input == Constants.Stop)
                 break;
 
             var result = stringReversal.Reverse(input);

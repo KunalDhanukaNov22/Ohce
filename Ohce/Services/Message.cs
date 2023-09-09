@@ -14,14 +14,14 @@
         person.Name = name;
 
         if (hour >= 6 && hour < 12)
-            return $"¡Buenos días {name}!";
+            return Constants.MorningWelcomeMessage(name);
         else if (hour >= 12 && hour < 20)
-            return $"¡Buenas tardes {name}!";
+            return Constants.AfternoonWelcomeMessage(name);
         else
-            return $"¡Buenas noches {name}!";
+            return Constants.EveningWelcomeMessage(name);
     }
 
-    public string GetPalindromeMessage() => "¡Bonita palabra!";
+    public string GetPalindromeMessage() => Constants.PalindromeMessage;
 
-    public string GetSignOffMessage() => $"Adios {person.Name}";
+    public string GetSignOffMessage() => Constants.SignOffMessage(person.Name);
 }
