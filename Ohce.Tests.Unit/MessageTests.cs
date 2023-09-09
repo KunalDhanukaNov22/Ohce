@@ -4,8 +4,7 @@ public class MessageTests
 {
     private const string ValidName = "Kunal";
     private const int ValidHour = 8;
-    private readonly Message message = new Message();
-
+    private readonly Message message = new();
 
     [Fact]
     public void Message_IsNotNull()

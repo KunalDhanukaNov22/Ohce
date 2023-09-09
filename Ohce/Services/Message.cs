@@ -21,13 +21,7 @@
             return $"¡Buenas noches {name}!";
     }
 
-    public string GetPalindromeMessage()
-    {
-        return "¡Bonita palabra!";
-    }
+    public string GetPalindromeMessage() => "¡Bonita palabra!";
 
-    public string GetSignOffMessage()
-    {
-        return $"Adios {person.Name}";
-    }
+    public string GetSignOffMessage() => $"Adios {person.Name}";
 }

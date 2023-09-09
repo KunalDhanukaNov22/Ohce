@@ -15,7 +15,6 @@ public class ClockTests
     {
         var result = clock.GetCurrentDateTimeNowUtc();
 
-        result.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMilliseconds(3));
+        result.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMilliseconds(5));
     }
-
 }

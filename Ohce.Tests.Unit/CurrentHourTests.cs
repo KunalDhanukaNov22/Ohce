@@ -7,10 +7,7 @@ public class CurrentHourTests
     private readonly Mock<IClock> clock = new();
     private readonly CurrentHour currentHour;
 
-    public CurrentHourTests()
-    {
-        currentHour = new CurrentHour(clock.Object);
-    }
+    public CurrentHourTests() => currentHour = new CurrentHour(clock.Object);
 
     [Fact]
     public void CurrentHour_IsNotNull()

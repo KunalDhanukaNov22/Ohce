@@ -2,19 +2,17 @@
 
 public class StringReversalTests
 {
+    private readonly StringReversal stringReversal = new();
+
     [Fact]
     public void StringReversal_IsNotNull()
     {
-        var result = new StringReversal();
-
-        result.Should().NotBeNull();
+        stringReversal.Should().NotBeNull();
     }
 
     [Fact]
     public void Reverse_WhenInvokedWithInvalidStringInput_ThrowsException()
     {
-        var stringReversal = new StringReversal();
-
         var result = () => stringReversal.Reverse(string.Empty);
 
         result.Should().Throw<ArgumentNullException>();
@@ -27,8 +25,6 @@ public class StringReversalTests
     [InlineData("Tenet", "teneT", true)]
     public void Reverse_WhenInvokedWithValidStringInput_ReturnReversedStringWithIsPalindromeStatus(string inputString, string expectedString, bool isPalindrome)
     {
-        var stringReversal = new StringReversal();
-
         var result = stringReversal.Reverse(inputString);
 
         result.ReversedString.Should().Be(expectedString);
