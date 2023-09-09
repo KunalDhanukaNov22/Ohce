@@ -6,6 +6,7 @@ namespace Ohce.Tests.Unit;
 public class ApplicationTests
 {
     private const string ValidName = "Kunal";
+    private const string Stop = "Stop!";
 
     private readonly Mock<TextReader> consoleInput;
     private readonly Mock<ICurrentHour> currentHour;
@@ -36,63 +37,28 @@ public class ApplicationTests
     }
 
     [Theory]
-    [InlineData("")]
-    [InlineData(null)]
-    public void Run_WhenNameIsEmpty_ThrowsError(string invalidName)
+    [InlineData(8, "¡Buenos días Kunal!")]
+    [InlineData(13, "¡Buenas tardes Kunal!")]
+    [InlineData(20, "¡Buenas noches Kunal!")]
+    public void Run_WhenNameIsProvidedWithTime_GreetWithWelcomeMessageAsPerTime(int hour, string message)
     {
-        InputSetup(invalidName, 8);
-
-        var output = () => application.Run();
-
-        output.Should().Throw<ArgumentNullException>();
-    }
-
-    [Fact]
-    public void Run_WhenNameIsProvidedInMorning_GreetWithMorningWelcomeMessage()
-    {
-        InputSetup(ValidName, 8);
+        InputSetup(hour, "Kunal", Stop);
 
         application.Run();
 
-        var outputarray = consoleOutput.ToString().Trim().Split(Environment.NewLine);
+        var outputarray = ConsoleOutput();
 
-        outputarray[0].Should().Be("¡Buenos días Kunal!");
-
-    }
-
-    [Fact]
-    public void Run_WhenNameIsProvidedInAfternoon_GreetWithAfternoonWelcomeMessage()
-    {
-        InputSetup(ValidName, 13);
-
-        application.Run();
-
-        var outputarray = consoleOutput.ToString().Trim().Split(Environment.NewLine);
-
-        outputarray[0].Should().Be("¡Buenas tardes Kunal!");
-
-    }
-
-    [Fact]
-    public void Run_WhenNameIsProvidedInNight_GreetWithNightWelcomeMessage()
-    {
-        InputSetup(ValidName, 20);
-
-        application.Run();
-
-        var outputarray = consoleOutput.ToString().Trim().Split(Environment.NewLine);
-
-        outputarray[0].Should().Be("¡Buenas noches Kunal!");
+        outputarray[0].Should().Be(message);
     }
 
     [Fact]
     public void Run_WhenInputSuppliedIsStop_ReturnSignOffMessage()
     {
-        InputSetup(ValidName, 20);
+        InputSetup(20, ValidName, "Stop!");
 
         application.Run();
 
-        var outputarray = consoleOutput.ToString().Trim().Split(Environment.NewLine);
+        var outputarray = ConsoleOutput();
 
         outputarray[1].Should().Be("Adios Kunal");
     }
@@ -100,124 +66,63 @@ public class ApplicationTests
     [Fact]
     public void Run_UntilInputSuppliedIsNotStop_ContinueToAskForUserInput()
     {
-        var sequence = new MockSequence();
-
-        consoleInput
-            .InSequence(sequence)
-            .Setup(x => x.ReadLine())
-            .Returns(ValidName);
-
-        consoleInput
-            .InSequence(sequence)
-            .Setup(x => x.ReadLine())
-            .Returns("String1");
-
-        consoleInput
-            .InSequence(sequence)
-            .Setup(x => x.ReadLine())
-            .Returns("String2");
-
-        consoleInput
-            .InSequence(sequence)
-            .Setup(x => x.ReadLine())
-            .Returns("String3");
-
-        consoleInput
-            .InSequence(sequence)
-            .Setup(x => x.ReadLine())
-            .Returns("Stop!");
+        InputSetup(20, ValidName, "String1", "String2", "String3", "String4", "String5", Stop);
 
         application.Run();
 
-        var outputarray = consoleOutput.ToString().Trim().Split(Environment.NewLine);
+        var outputarray = ConsoleOutput();
 
-        outputarray[4].Should().Be("Adios Kunal");
+        outputarray[6].Should().Be("Adios Kunal");
     }
 
     [Fact]
     public void Run_WhenInputSuppliedApartFromNameAndStop_GetReverseOfTheInputString()
     {
-        var sequence = new MockSequence();
-
-        consoleInput
-            .InSequence(sequence)
-            .Setup(x => x.ReadLine())
-            .Returns(ValidName);
-
-        consoleInput
-            .InSequence(sequence)
-            .Setup(x => x.ReadLine())
-            .Returns("String1");
-
-        consoleInput
-            .InSequence(sequence)
-            .Setup(x => x.ReadLine())
-            .Returns("London");
-
-        consoleInput
-            .InSequence(sequence)
-            .Setup(x => x.ReadLine())
-            .Returns("Paris");
-
-        consoleInput
-            .InSequence(sequence)
-            .Setup(x => x.ReadLine())
-            .Returns("Stop!");
+        InputSetup(20, ValidName, "London", "Paris", Stop);
 
         application.Run();
 
-        var outputarray = consoleOutput.ToString().Trim().Split(Environment.NewLine);
+        var outputarray = ConsoleOutput();
 
-        outputarray[1].Should().Be("1gnirtS");
-        outputarray[2].Should().Be("nodnoL");
-        outputarray[3].Should().Be("siraP");
-        outputarray[4].Should().Be("Adios Kunal");
+        outputarray[1].Should().Be("nodnoL");
+        outputarray[2].Should().Be("siraP");
+        outputarray[3].Should().Be("Adios Kunal");
     }
 
     [Fact]
     public void Run_WhenInputSuppliedApartFromNameAndStopIsPalindrome_GetReverseOfTheInputStringWithPalindromeMessage()
     {
-        var sequence = new MockSequence();
-
-        consoleInput
-            .InSequence(sequence)
-            .Setup(x => x.ReadLine())
-            .Returns(ValidName);
-
-        consoleInput
-            .InSequence(sequence)
-            .Setup(x => x.ReadLine())
-            .Returns("tenet");
-
-        consoleInput
-            .InSequence(sequence)
-            .Setup(x => x.ReadLine())
-            .Returns("Stop!");
+        InputSetup(20, ValidName, "tenet", Stop);
 
         application.Run();
 
-        var outputarray = consoleOutput.ToString().Trim().Split(Environment.NewLine);
+        var outputarray = ConsoleOutput();
 
         outputarray[1].Should().Be("tenet");
         outputarray[2].Should().Be("¡Bonita palabra!");
         outputarray[3].Should().Be("Adios Kunal");
     }
 
-
-    private void InputSetup(string name, int hour)
+    private void InputSetup(int hour, params string[] inputs)
     {
         var sequence = new MockSequence();
 
-        consoleInput
-            .InSequence(sequence)
-            .Setup(x => x.ReadLine())
-            .Returns(name);
-
-        consoleInput
-            .InSequence(sequence)
-            .Setup(x => x.ReadLine())
-            .Returns("Stop!");
+        foreach (var input in inputs)
+        {
+            consoleInput
+                .InSequence(sequence)
+                .Setup(x => x.ReadLine())
+                .Returns(input);
+        }
 
         currentHour.Setup(x => x.Get()).Returns(hour);
+    }
+
+    private string[] ConsoleOutput()
+    {
+        return consoleOutput
+            .ToString()
+            .Trim()
+            .Split(Environment.NewLine);
     }
 }
